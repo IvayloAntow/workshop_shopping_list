@@ -1,7 +1,13 @@
 package com.example.prep.web;
 
+import com.example.prep.model.binding.UserLoginBindingModel;
 import com.example.prep.model.binding.UserRegisterBindingModel;
+import com.example.prep.model.service.UserServiceModel;
+import com.example.prep.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +19,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/users")
 public class UserController {
+
+    private final ModelMapper modelMapper;
+    private final UserService userService;
+
+    public UserController(ModelMapper modelMapper, UserService userService) {
+        this.modelMapper = modelMapper;
+        this.userService = userService;
+    }
 
     @GetMapping("/register")
     public String register(Model model){
@@ -29,7 +43,12 @@ public class UserController {
                                   BindingResult bindingResult,
                                   RedirectAttributes redirectAttributes){
 
-        if (bindingResult.hasErrors()){
+         boolean isValidPassword = userRegisterBindingModel
+                .getPassword().equals(userRegisterBindingModel.getConfirmPassword());
+
+
+
+        if (bindingResult.hasErrors() || !isValidPassword ){
             redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRegisterBindingModel",
                     bindingResult);
@@ -37,7 +56,50 @@ public class UserController {
 
             return "redirect:register";
         }
+
+        userService.register(modelMapper
+                .map(userRegisterBindingModel , UserServiceModel.class));
+
         return "redirect:/login";
 
     }
+    @GetMapping("/login")
+    public String login(Model model){
+        if (!model.containsAttribute("userLoginBindingModel")){
+            model.addAttribute("userLoginBindingModel" , new UserLoginBindingModel());
+            model.addAttribute("notFound" , false);
+        }
+
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String loginConfirm(@Valid UserLoginBindingModel userLoginBindingModel
+    , BindingResult bindingResult, RedirectAttributes redirectAttributes,
+                               HttpSession httpSession){
+
+        if (bindingResult.hasErrors()){
+            redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userLoginBindingModel",
+                    bindingResult);
+
+            return "redirect:login";
+        }
+
+        UserServiceModel userServiceModel = userService
+                .findByUsernameAndPassword(userLoginBindingModel.getUsername()
+                , userLoginBindingModel.getPassword());
+
+        if (userServiceModel == null){
+            redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
+            redirectAttributes.addFlashAttribute("notFound" , true);
+            return "redirect:/login";
+        }
+
+        httpSession.setAttribute("user" , userServiceModel);
+
+        return "redirect:/";
+
+    }
+
 }
