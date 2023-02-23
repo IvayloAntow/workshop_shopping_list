@@ -29,7 +29,7 @@
 <main>
     <h1 class="text-center mt-2"><span class="badge badge-pill badge-dark">Add product</span></h1>
     <hr class="hr-3 w-25 bg-white"/>
-    <form class="mx-auto w-25 bg-blur rounded" th:object="${productAddBindingModel}" method="POST" action="/product/add">
+    <form class="mx-auto w-25 bg-blur rounded" th:object="${productAddBindingModel}" method="POST" action="/products/add">
         <div class="form-group">
             <div class="label-holder textCol d-flex justify-content-center">
                 <label for="name" class="h4 mb-2 text-white">Name</label>
@@ -55,21 +55,20 @@
             <div class="label-holder text-white textCol d-flex justify-content-center">
                 <label for="price" class="h4 mb-2">Price</label>
             </div>
-            <input th:field="*{price}" th:errorclass="bg-danger" type="datetime-local" type="number" step="0.1" class="form-control" id="price" name="price"/>
+            <input th:field="*{price}" th:errorclass="bg-danger" type="number" step="0.1" class="form-control" id="price" name="price"/>
             <small th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-danger">Price error message</small>
         </div>
         <div class="form-group">
             <div class="text-white label-holder d-flex justify-content-center">
                 <label for="category" class="h4 mb-2">Category</label>
             </div>
-            <select  class="browser-default custom-select" id="category" name="category">
+            <select th:field="*{category}" th:errorclass="bg-danger" class="browser-default custom-select" id="category" name="category">
                 <option value="">Select category</option>
-				<option value="FOOD">Food</option>
-                <option value="DRINK">Drink</option>
-                <option value="HOUSEHOLD">Household</option>
-                <option value="OTHER">Other</option>  				
+				<option th:each="c : ${T(com.example.prep.model.entity.enums.CategoriesEnum).values()}"
+                      th:text="${c}" th:value="${c}">Food</option>
+
             </select>
-            <small class="text-danger">Category error message</small>
+            <small th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="text-danger">Category error message</small>
         </div>
 
         <div class="button-holder d-flex justify-content-center">

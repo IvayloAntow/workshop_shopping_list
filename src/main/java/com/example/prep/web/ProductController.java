@@ -32,9 +32,9 @@ public class ProductController {
 
           if(bindingResult.hasErrors()){
                redirectAttributes.addFlashAttribute("productAddBindingModel", productAddBindingModel);
-               redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.productAddBindingModel");
+               redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.productAddBindingModel" , bindingResult);
 
-               return "return:add";
+               return "redirect:add";
           }
 
                return "redirect:/" ;
