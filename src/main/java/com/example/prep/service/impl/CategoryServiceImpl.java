@@ -29,4 +29,11 @@ public class CategoryServiceImpl implements CategoryService {
                     });
         }
     }
+
+    @Override
+    public CategoriesEntity findByName(CategoriesEnum categoryName) {
+        return categoryRepository.
+                findByName(categoryName)
+                .orElse(null);
+    }
 }

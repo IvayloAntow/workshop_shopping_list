@@ -1,6 +1,7 @@
 package com.example.prep.model.binding;
 
 import com.example.prep.model.entity.enums.CategoriesEnum;
+import com.example.prep.model.service.ProductServiceModel;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
@@ -76,4 +77,6 @@ public class ProductAddBindingModel {
         this.category = category;
         return this;
     }
+
+
 }
