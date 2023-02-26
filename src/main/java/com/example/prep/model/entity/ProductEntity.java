@@ -26,7 +26,7 @@ public class ProductEntity extends BaseEntity{
 
     // mnogo producti kum edna kategoriq
     @ManyToOne
-    private CategoriesEntity categoy;
+    private CategoriesEntity category;
 
     public ProductEntity() {
     }
@@ -67,12 +67,12 @@ public class ProductEntity extends BaseEntity{
         return this;
     }
 
-    public CategoriesEntity getCategoy() {
-        return categoy;
+    public CategoriesEntity getCategory() {
+        return category;
     }
 
-    public ProductEntity setCategoy(CategoriesEntity categoy) {
-        this.categoy = categoy;
+    public ProductEntity setCategory(CategoriesEntity categoy) {
+        this.category = categoy;
         return this;
     }
 }
