@@ -100,7 +100,7 @@ public class UserController {
         if (userServiceModel == null){
             redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
             redirectAttributes.addFlashAttribute("notFound" , true);
-            return "redirect:/login";
+            return "redirect:login";
         }
 
         httpSession.setAttribute("user" , userServiceModel);
